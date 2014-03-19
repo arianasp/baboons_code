@@ -28,10 +28,9 @@ hold on;
 imagesc(data_mat,clims)
 colormap(red_white_blue_colormap())
 axis square
-axis([-1 N+1 -1 N+1])
+axis([-2 N+1 -2 N+1])
 
 for i = 1:N
-    x = 0;
     y = ind_ranks(i);
     
     %get appropriate color for age class
@@ -52,8 +51,10 @@ for i = 1:N
         mark = 'o';
     end
     
-    plot(x,y,mark,'MarkerSize',10,'MarkerFaceColor',col,'MarkerEdgeColor',col)
-    plot(y,x,mark,'MarkerSize',10,'MarkerFaceColor',col,'MarkerEdgeColor',col)
+    plot(0,y,mark,'MarkerSize',10,'MarkerFaceColor',col,'MarkerEdgeColor',col)
+    plot(y,0,mark,'MarkerSize',10,'MarkerFaceColor',col,'MarkerEdgeColor',col)
+    text(-1,y,num2str(i),'Color','black','FontWeight','bold','HorizontalAlignment','Center')
+    text(y,-1,num2str(i),'Color','black','FontWeight','bold','HorizontalAlignment','Center')
 end
     
     

@@ -93,7 +93,7 @@ disp('constructing event matrix...')
 
 %% Rank directionality matrix by mean directionality for each individual
 %Rank the directionality matrix (direc_mat) from high to low. "Leaders"
-%will be displayed at the top row and leftmost column
+%will be displayed at the bottom row
 
 
 disp('ranking event matrix...')
