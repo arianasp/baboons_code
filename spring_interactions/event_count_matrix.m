@@ -74,9 +74,9 @@ direc_mat = zeros(N,N);
 for i = 1:N
     for j = 1:N
         if i~=j
-            direc_mat(i,j) = (event_mat(i,j))/(event_mat(i,j)+event_mat(j,i));
+            direc_mat(i,j) = (event_mat(i,j) - event_mat(j,i))/(event_mat(i,j)+event_mat(j,i));
         else
-            direc_mat(i,j) = 0.5;
+            direc_mat(i,j) = NaN;
         end
     end
 end
