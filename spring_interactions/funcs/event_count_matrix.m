@@ -1,9 +1,9 @@
-function [ event_mat, direc_mat ] = event_count_matrix( all_interactions, event_type, measure_type, strength_thresh, disp_thresh )
+function [ event_mat, direc_mat ] = event_count_matrix( interactions_all, event_type, measure_type, strength_thresh, disp_thresh )
 %Constructs a matrix mat, where mat(i,j) = # of events of type "event_type"
 %where j lead i (i.e. either j pulled i, j pushed i, j anchored i, or j
 %repelled i).
 %INPUTS:
-%   all_interactions: [NxN cell array] containing structs with all 
+%   interactions_all: [NxN cell array] containing structs with all 
 %       interactions between each pair of individuals 
 %       (output of get_dyadic_interactions_all_pairs)
 %   event_type: [string] specifying which type of event (can be
@@ -25,7 +25,7 @@ function [ event_mat, direc_mat ] = event_count_matrix( all_interactions, event_
 %       + event_mat(j,i)]
 
 %get number of individuals
-N = size(all_interactions,1);
+N = size(interactions_all,1);
 
 %initialize matrix to hold results
 mat = zeros(N,N);
@@ -34,7 +34,7 @@ mat = zeros(N,N);
 for i = 1:N
     for j = (i+1):N
         %get interactions between those individuals
-        interactions = all_interactions{i,j};
+        interactions = interactions_all{i,j};
         for k = 1:length(interactions)
             
             if strcmp(interactions(k).type,event_type)
