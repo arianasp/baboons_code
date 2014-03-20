@@ -13,20 +13,25 @@
 
 %%% ----------- Input / output parameters ----------------- %%%
 
-%data file containing x,y data
-xydatafile = '/Users/arianasp/Desktop/Baboons/data/matlab_raw/xy_level1.mat';
+%whether to load data from file or generate new data
+load_data = 1;
 
 %whether to save output data
 save_data = 0;
 
 %whether to save output figures
-save_figs = 0;
+save_figs = 1;
+
+%data file containing x,y data
+xydatafile = '/Users/arianasp/Desktop/Baboons/data/matlab_raw/xy_level1.mat';
 
 %directory in which to save data (only matters if save_data == 1)
 outdir = '/Users/arianasp/Desktop/Baboons/output/push_pull/interactions_data';
 
 %directory in which to save figures (only matters if save_figs == 1)
 figdir = '/Users/arianasp/Desktop/Baboons/output/push_pull/plots';
+
+datadir = '/Users/arianasp/Desktop/Baboons/output/push_pull/interactions_data';
 
 %%% ----------- Analysis-related parameters -------------- %%%
 
@@ -49,33 +54,42 @@ thresh_type = 'mult';
 
 %minimum strength of interaction (multiplicative strength) needed to
 %count it as an event
-strength_thresh = 0.2;
+strength_thresh = 0.1;
 
 %minimum disparity of interaction (multiplicative disparity) needed to
 %count it as an event
-disp_thresh = 0.2;
+disp_thresh = 0.1;
 
 %% Load required data
 
 disp('loading data...')
 
-load(xydatafile)
+if load_data
+    %load pre-computed interactions data
+    load([datadir '/dyad_interactions_noise_thresh_' num2str(noise_thresh) '.mat'])
+    load(xydatafile)
+    N = size(interactions_all,1); %number of individuals
+else
+    %load raw x-y coordinate data to compute interactions now
+    load(xydatafile)
+    N = size(xs,1);
+end
 
 
-%% Get interactions
+%% Get interactions if needed
 
-disp('getting interactions...')
+if not(load_data)
+    disp('getting interactions...')
 
-N = size(xs,1); %number of individuals
+    interactions_all = cell(N,N); %initialize cell array to hold data
 
-interactions_all = cell(N,N); %initialize cell array to hold data
-
-%get interactions between every pair of individuals and store them
-for a = 1:N
-    for b = (a+1):N
-    	[ interactions ] = dyadic_interactions( xs, ys, day_start_idxs, day_range, a, b, noise_thresh );
-        interactions_all{a,b} = interactions;
-	end
+    %get interactions between every pair of individuals and store them
+    for a = 1:N
+        for b = (a+1):N
+            [ interactions ] = dyadic_interactions( xs, ys, day_start_idxs, day_range, a, b, noise_thresh );
+            interactions_all{a,b} = interactions;
+        end
+    end
 end
 
 %% Construct interaction matrices
@@ -106,8 +120,17 @@ end
 %% Create figure
 disp('creating figure...')
 
+%create a heat map
 heat_map_with_age_sex_labels( new_mat, baboon_info, [-1 1], ranks )
+colorbar
+title([event_type ' directionality, noise thresh = ', num2str(noise_thresh), ', min mult. strength = ' num2str(strength_thresh) ', min disparity = ' num2str(disp_thresh)])
 
+if save_figs
+    print('-dpng',[figdir '/' event_type '_direc_mat_noise_thresh_' num2str(noise_thresh) '_min_strength_' num2str(strength_thresh) '_min_disp_' num2str(disp_thresh) '.png'])
+end
 
+if save_data
+    save([outdir '/dyad_interactions_noise_thresh_' num2str(noise_thresh) '.mat'])
+end
 
 
