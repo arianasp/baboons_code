@@ -11,7 +11,8 @@ function [ J ] = jaccard_matrix( M )
 %OUTPUTS:
 %   J: [NxN matrix] the "Jaccard matrix" as defined above
 %MISSING DATA:
-%   ignores NaNs
+%   if M(i,j) = NaN, then J(i,j) = NaN. Ignores NaNs for computing the
+%       denominator of the Jaccard index
 
 N = size(M,1);
 
@@ -24,7 +25,9 @@ J = nan(N,N);
 
 for i = 1:N
     for j = 1:N
-        J(i,j) = M(i,j) + M(j,i) / (nansum(M(i,:)) + nansum(M(:,j)));
+        if not(isnan(M(i,j)))
+            J(i,j) = (M(i,j) + M(j,i)) / (nansum(M(i,:)) + nansum(M(:,j)));
+        end
     end
 end
 
