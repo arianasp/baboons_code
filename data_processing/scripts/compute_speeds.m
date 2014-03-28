@@ -7,7 +7,7 @@
 %positions in consecutive time steps. If this is greater than 1, the speed
 %is found using the difference between positions that are t_step seconds
 %apart.
-t_step = 10;
+t_step = 3;
 
 %filename for the file with xy data
 xy_file = ['/Users/arianasp/Desktop/Baboons/data/matlab_raw/xy_level1.mat'];
