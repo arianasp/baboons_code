@@ -20,7 +20,7 @@ load_data = 1;
 save_data = 0;
 
 %whether to save output figures
-save_figs = 1;
+save_figs = 0;
 
 %data file containing x,y data
 xydatafile = '/Users/arianasp/Desktop/Baboons/data/matlab_raw/xy_level1.mat';

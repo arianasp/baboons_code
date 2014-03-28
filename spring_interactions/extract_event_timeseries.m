@@ -74,7 +74,9 @@ for i = 1:N
                         t_event_end = min(tf,t_end);
                         start_idx = t_event_begin - t_start + 1;
                         end_idx = t_event_end - t_start + 1;
-                        interactions_over_time(i,j,start_idx:end_idx) = 1;
+                        leader = interactions(k).leader;
+                        follower = interactions(k).follower;
+                        interactions_over_time(leader,follower,start_idx:end_idx) = 1;
                     end
                 end
             end
