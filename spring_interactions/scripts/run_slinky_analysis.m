@@ -14,7 +14,7 @@
 %%% ----------- Input / output parameters ----------------- %%%
 
 %whether to load data from file or generate new data
-load_data = 1;
+load_data = 0;
 
 %whether to save output data
 save_data = 0;
@@ -46,7 +46,7 @@ day_range = 1:14;
 noise_thresh = 10;
 
 %which type of interaction to focus on (push, pull, anchor, repel)
-event_type = 'pull';
+event_type = 'push';
 
 %which type of threshold to use (multiplicative or additive) 'mult' or
 %'add'
@@ -111,14 +111,14 @@ disp('constructing event matrix...')
 
 
 disp('ranking event matrix...')
-[ new_mat, ranks ] = rank_mat( direc_mat, 'mean', 'descend', 'col');
+[ new_mat, ranks ] = rank_mat( direc_mat, '_mean', 'descend', 'col');
 for i = 1:N
     new_mat(i,i) = 0;
 end
 
 
 %% Create figure
-disp('creating figure...')
+disp('creating figures...')
 
 %create a heat map
 heat_map_with_age_sex_labels( new_mat, baboon_info, [-1 1], ranks )

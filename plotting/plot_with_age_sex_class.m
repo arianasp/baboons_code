@@ -24,6 +24,7 @@ adults = nan(N,1); subadults = nan(N,1); juveniles = nan(N,1);
 males = nan(N,1); females = nan(N,1);
 
 for i = 1:N
+    
     if strcmp(baboon_info(i).age,'A')
         adults(i)=1;
     elseif strcmp(baboon_info(i).age,'SA')
@@ -48,12 +49,12 @@ hold on;
 
 set(0,'DefaultAxesFontSize',16)
 
-plot(data_x.*males.*adults,data_y.*males.*adults,'s','MarkerSize',10,'MarkerFaceColor','black','MarkerEdgeColor','black')
-plot(data_x.*males.*subadults,data_y.*males.*subadults,'s','MarkerSize',10,'MarkerFaceColor','red','MarkerEdgeColor','red')
-plot(data_x.*males.*juveniles,data_y.*males.*juveniles,'s','MarkerSize',10,'MarkerFaceColor','green','MarkerEdgeColor','green')
-plot(data_x.*females.*adults,data_y.*females.*adults,'o','MarkerSize',10,'MarkerFaceColor','black','MarkerEdgeColor','black')
-plot(data_x.*females.*subadults,data_y.*females.*subadults,'o','MarkerSize',10,'MarkerFaceColor','red','MarkerEdgeColor','red')
-plot(data_x.*females.*juveniles,data_y.*females.*juveniles,'o','MarkerSize',10,'MarkerFaceColor','green','MarkerEdgeColor','green')
+plot(data_x.*males.*adults,data_y.*males.*adults,'o','MarkerSize',10,'MarkerFaceColor',[0 0 255]./255,'MarkerEdgeColor',[0 0 255]./255)
+plot(data_x.*males.*subadults,data_y.*males.*subadults,'o','MarkerSize',10,'MarkerFaceColor',[102 204 255]./255,'MarkerEdgeColor',[102 204 255]./255)
+plot(data_x.*males.*juveniles,data_y.*males.*juveniles,'o','MarkerSize',10,'MarkerFaceColor',[102 102 102]./255,'MarkerEdgeColor',[102 102 102]./255)
+plot(data_x.*females.*adults,data_y.*females.*adults,'o','MarkerSize',10,'MarkerFaceColor',[255 0 0]./255,'MarkerEdgeColor',[255 0 0]./255)
+plot(data_x.*females.*subadults,data_y.*females.*subadults,'o','MarkerSize',10,'MarkerFaceColor',[255 204 102]./255,'MarkerEdgeColor',[255 204 102]./255)
+plot(data_x.*females.*juveniles,data_y.*females.*juveniles,'o','MarkerSize',10,'MarkerFaceColor',[102 102 102]./255,'MarkerEdgeColor',[102 102 102]./255)
 
 xlabel(x_label)
 ylabel(y_label)
