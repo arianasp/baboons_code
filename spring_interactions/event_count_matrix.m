@@ -1,4 +1,4 @@
-function [ event_mat, direc_mat ] = event_count_matrix( interactions_all, event_type, measure_type, strength_thresh, disp_thresh )
+function [ event_mat, direc_mat ] = event_count_matrix( interactions_all, event_type, measure_type, strength_thresh, disp_thresh, times_to_include )
 %Constructs a matrix mat, where mat(i,j) = # of events of type "event_type"
 %where j lead i (i.e. either j pulled i, j pushed i, j anchored i, or j
 %repelled i).
@@ -15,6 +15,10 @@ function [ event_mat, direc_mat ] = event_count_matrix( interactions_all, event_
 %       in the count
 %   disp_thresh: [number] minimum disparity needed to include an event 
 %       in the count
+%   times_to_include: [vector] of time indexes that should be included when
+%       counting events. This is so that you can create a matrix that
+%       represents the number of interactions across a subset of the data.
+%       By default, times_to_include includes all times.
 %OUTPUTS:
 %   event_mat: [NxN matrix] where mat(i,j) = number of times that j lead i
 %   direc_mat: [NxN matrix] where mat(i,j) = directionality of the
@@ -30,8 +34,15 @@ N = size(interactions_all,1);
 %initialize matrix to hold results
 mat = zeros(N,N);
 
+if exist('times_to_include')
+    subset_time = 1;
+else
+    subset_time = 0;
+end
+
 %for each pair of individuals
 for i = 1:N
+    i
     for j = (i+1):N
         %get interactions between those individuals
         interactions = interactions_all{i,j};
@@ -57,7 +68,13 @@ for i = 1:N
                 %event in the count (add 1 to the corresponding matrix
                 %cell)
                 if disp >= disp_thresh && strength >= strength_thresh
-                    mat(foll,lead) = mat(foll,lead) + 1;
+                    if not(subset_time)
+                        mat(foll,lead) = mat(foll,lead) + 1;
+                    else
+                       if any(times_to_include == interactions(k).time_idxs(2))
+                           mat(foll,lead) = mat(foll,lead) + 1;
+                       end
+                    end
                 end
             end
         end
