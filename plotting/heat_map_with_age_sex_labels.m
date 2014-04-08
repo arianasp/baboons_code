@@ -28,33 +28,42 @@ hold on;
 imagesc(data_mat,clims)
 colormap(red_white_blue_colormap())
 axis square
-axis([-2 N+1 -2 N+1])
+axis([-3 N+1 -3 N+1])
 
 for i = 1:N
     y = ind_ranks(i);
     
-    %get appropriate color for age class
-    if strcmp(baboon_info(i).age,'A')
-        col = 'black';
-    elseif strcmp(baboon_info(i).age,'SA')
-        col = 'red';
-    elseif strcmp(baboon_info(i).age,'J')
-        col = 'green';
+    %get appropriate color for age/sex class
+    if strcmp(baboon_info(i).sex,'M')
+    	if strcmp(baboon_info(i).age,'A')
+        	col = [0 0 255]./255;
+        elseif strcmp(baboon_info(i).age,'SA')
+        	col = [102 204 255]./255;
+        else
+        	col = [102 102 102]./255;
+        end
     else
-        error('unknown age class')
-    end
+    	if strcmp(baboon_info(i).age,'A')
+    		col = [255 0 0]./255;
+    	elseif strcmp(baboon_info(i).age,'SA')
+    		col = [255 204 102]./255;
+    	else
+    		col = [102 102 102]./255;
+    	end
+   end
     
     %get appropriate marker shape for sex
     if strcmp(baboon_info(i).sex,'M')
-        mark = 's';
+        mark = 'o';
     elseif strcmp(baboon_info(i).sex,'F')
         mark = 'o';
     end
     
     plot(0,y,mark,'MarkerSize',10,'MarkerFaceColor',col,'MarkerEdgeColor',col)
     plot(y,0,mark,'MarkerSize',10,'MarkerFaceColor',col,'MarkerEdgeColor',col)
-    text(-1,y,num2str(i),'Color','black','FontWeight','bold','HorizontalAlignment','Center')
-    text(y,-1,num2str(i),'Color','black','FontWeight','bold','HorizontalAlignment','Center')
+    h1=text(-1.5,y,baboon_info(i).collar_num,'Color','black','FontWeight','bold','HorizontalAlignment','Center');
+    h2=text(y,-1.5,baboon_info(i).collar_num,'Color','black','FontWeight','bold','HorizontalAlignment','Center');
+	set(h2,'rotation',90)
 end
     
     
