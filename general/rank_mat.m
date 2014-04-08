@@ -6,7 +6,7 @@ function [ new_mat, ranks ] = rank_mat( mat, test_statistic, rank_direc, rank_di
 %INPUTS:
 %   mat: [NxN matrix] of values to rank
 %   test_statistic: [string] what test statistic to use as the value to 
-%       rank by (can be 'mean','median','sum','min','max','std')
+%       rank by (can be 'mean','median','sum','min','max','std','binary_mean')
 %   rank_direc: [string] specifying whether to rank in ascending order
 %       or descending order ('ascend' or 'descend')
 %   rank_dim: [string] specifying whether to rank by row or by column
@@ -69,6 +69,10 @@ elseif strcmp(test_statistic,'max')
     stats = nanmax(mat,[],dim);
 elseif strcmp(test_statistic,'std')
     stats = nanstd(mat,dim);
+elseif strcmp(test_statistic,'binary_mean')
+    bin_mat = single(mat > 0);
+    bin_mat(find(isnan(mat))) = NaN;
+    stats = nanmean(bin_mat,dim);
 else
     error('unknown test statistic specified')
 end
