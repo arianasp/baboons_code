@@ -1,6 +1,7 @@
-function [ n_approach_avoids ] = get_approach_avoid_interactions( xs, ys, i, j, time_range, paras)
+function [ times ] = get_approach_avoid_interactions( xs, ys, i, j, time_range, paras)
 %Finds all the approach-avoid interactions between individual i and j
-%during the time range given by time_range. 
+%during the time range given by time_range. i is the approacher, j is the
+%avoider.
 %NOTE: There are currently some arbitrary thresholds in this function. I
 %just hard-coded them in for now because there were so many and I got tired
 %of naming variables, but at some point I may want to generalize this
@@ -42,7 +43,9 @@ if length(time_range) ~= 2
 end
     
 n_approach_avoids = 0; %number of approach avoid interactions found
+times = [];
 
+idx = 1;
 t = time_range(1)+30;
 while t <= (time_range(2)-30)
     found = 0; %set 'found' flag to false
@@ -63,6 +66,7 @@ while t <= (time_range(2)-30)
                             if disp_j_fut > paras.min_avoid_mvmt %if j moved more than min_avoid_mvmt in the next 10 sec
                                 n_approach_avoids = n_approach_avoids + 1; %add an approach avoid interaction!
                                 found = 1; %set found flag to true
+                                times(idx) = t;
                             end
                         end
                     end

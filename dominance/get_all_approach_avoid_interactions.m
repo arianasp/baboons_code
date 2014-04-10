@@ -5,11 +5,11 @@
 %load data
 load('/Users/arianasp/Desktop/Baboons/data/matlab_raw/xy_level1.mat');
 
-xs_to_use = xs; %which x data to use
-ys_to_use = ys; %which y data to use
-
-n_inds = size(xs_to_use,1); % number of individuals
+n_inds = size(xs,1); % number of individuals
 n_days = 14; %number of days in the data set
+
+%create a data struct to hold all data
+data = {};
 
 %create parameter struct
 paras = {};
@@ -21,8 +21,15 @@ paras.max_prior_avoider_mvmt = 1.5;
 paras.max_subseq_approacher_mvmt = 1.5;
 paras.min_avoid_mvmt = 3;
 paras.min_time_between_interactions = 10;
+paras.days = 1:n_days;
 
-AA = zeros(n_inds,n_inds,n_days); %matrix to hold approach-avoid interactions on each day
+data.paras = paras;
+
+times = [];
+approachers = [];
+avoiders = [];
+
+dom_mat = zeros(n_inds,n_inds);
 
 for d = 1:n_days %for each day
     
@@ -38,16 +45,18 @@ for d = 1:n_days %for each day
         for j = 1:n_inds
             if i ~= j %if they are the same individual, don't compute
                 
-                [ n_approach_avoids ] = get_approach_avoid_interactions( xs_to_use, ys_to_use, i, j, time_range, paras);
-                AA(i,j,d) = n_approach_avoids;
+                [ times_ij ] = get_approach_avoid_interactions( xs, ys, i, j, time_range, paras);
+                times = [times times_ij];
+                approachers = [approachers ones(1,length(times_ij))*i];
+                avoiders = [avoiders ones(1,length(times_ij))*j];
+                dom_mat(i,j) = dom_mat(i,j) + length(times_ij);
             end
         end
     end
 end
 
-data = {};
-data.paras = paras;
-data.approach_avoids_by_day = AA;
-data.approach_avoids_total = nansum(AA,3);
+data.dom_mat = dom_mat;
+data.times = times;
+data.approachers = approachers;
+data.avoiders = avoiders;
 
-save('/Users/arianasp/Desktop/Dropbox/baboons_shared/network_data/dominance/dominance_network.mat','data')
