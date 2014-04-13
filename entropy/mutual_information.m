@@ -119,9 +119,9 @@ elseif D == 1
 end
 
 %get log values and substitute 0 for log(0) so that 0*log(0) = 0
-log_joint = log(joint);
-log_sing_x = log(sing_x);
-log_sing_y = log(sing_y);
+log_joint = log2(joint);
+log_sing_x = log2(sing_x);
+log_sing_y = log2(sing_y);
 log_joint(find(joint == 0)) = 0;
 log_sing_x(find(sing_x == 0)) = 0;
 log_sing_y(find(sing_y == 0)) = 0;
