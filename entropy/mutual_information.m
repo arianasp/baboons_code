@@ -1,4 +1,4 @@
-function [ MI ] = mutual_information( X, Y, mins, maxes, nbins )
+function [ data ] = mutual_information( X, Y, mins, maxes, nbins )
 %Computes the mutual information between X and Y, which can
 %be either Nx1 column vectors (i.e. one-dimensional data) or Nx2 matrices
 %(i.e. two-dimensional data). Note that higher-dimensional data are not
@@ -16,7 +16,11 @@ function [ MI ] = mutual_information( X, Y, mins, maxes, nbins )
 %   nbins: [number or 1x2 vector] giving the number of bins to use for each
 %       dimension (matrix column)
 %OUTPUTS:
-%   MI: [number] the mutual information between the two sets of data
+%   data: [struct] containing the following fields
+%       MI: [number] the mutual information between the two sets of data
+%       H_X: entropy of the distribution determined by X
+%       H_Y: entropy of the distribution determined by Y
+%       n_times: number of non-NaN times that went into the computation
 
 %Note: Deals with NaNs by removing rows of both X and Y where either X or Y
 %contained a NaN in that row.
@@ -82,6 +86,8 @@ xr2(nans) = [];
 yr1(nans) = [];
 yr2(nans) = [];
 
+n_times = length(xr1);
+
 %construct distributions
 if D == 2
     joint = [xr1, yr1, xr2, yr2];
@@ -126,6 +132,14 @@ end
 
 %compute mutual information
 MI = H_x + H_y - H_joint;
+
+data.MI = MI;
+data.H_joint = H_joint;
+data.H_X = H_x;
+data.H_Y = H_y;
+data.n_times = n_times;
+
+
 
 
 
