@@ -78,13 +78,20 @@ end
 
 %remove out of range data
 nans = find(isnan(xr1));
-nans = union(nans,find(isnan(xr2)));
 nans = union(nans,find(isnan(yr1)));
-nans = union(nans,find(isnan(yr2)));
+
+if D == 2
+    nans = union(nans,find(isnan(xr2)));
+    nans = union(nans,find(isnan(yr2)));
+end
+
 xr1(nans) = [];
-xr2(nans) = [];
 yr1(nans) = [];
-yr2(nans) = [];
+
+if D == 2
+    xr2(nans) = [];
+    yr2(nans) = [];
+end
 
 n_times = length(xr1);
 
