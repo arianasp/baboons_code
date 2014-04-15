@@ -62,7 +62,7 @@ X(nans,:) = [];
 Y(nans,:) = [];
 
 %bins for dimension 1
-x1 = transpose(linspace(mins(1), maxes(1),nbins(1)));
+x1 = transpose(linspace(mins(1)-(maxes(1)-mins(1))/nbins(1)/2, maxes(1)+(maxes(1)-mins(1))/nbins(1)/2,nbins(1)));
 
 %interpolaed values for x and y in dimension 1
 xr1 = interp1(x1,1:numel(x1),X(:,1),'nearest');
@@ -70,7 +70,7 @@ yr1 = interp1(x1,1:numel(x1),Y(:,1),'nearest');
 
 if D == 2
     %bins for dimension 2
-    x2 = transpose(linspace(mins(2), maxes(2),nbins(2)));
+    x2 = transpose(linspace(mins(2)-(maxes(2)-mins(2))/nbins(2)/2, maxes(2)+(maxes(2)-mins(2))/nbins(2)/2,nbins(2)));
     %interpolated values for x and y in dimension 2
     xr2 = interp1(x2,1:numel(x2),X(:,2),'nearest');
     yr2 = interp1(x2,1:numel(x2),Y(:,2),'nearest');
