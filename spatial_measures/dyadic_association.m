@@ -114,9 +114,9 @@ if D == 2
     joint = accumarray(joint,1,[nbins(1) nbins(1) nbins(2) nbins(2)]);
     sing_x = accumarray(sing_x,1,[nbins(1) nbins(2)]);
     sing_y = accumarray(sing_y,1,[nbins(1) nbins(2)]);
-    joint = joint / sum(sum(sum(sum(joint))));
-    sing_x = sing_x / sum(sum(sing_x));
-    sing_y = sing_y / sum(sum(sing_y));
+    joint_norm = joint / sum(sum(sum(sum(joint))));
+    sing_x_norm = sing_x / sum(sum(sing_x));
+    sing_y_norm = sing_y / sum(sum(sing_y));
 elseif D == 1
     joint = [xr1,yr1];
     sing_x = xr1;
@@ -124,20 +124,25 @@ elseif D == 1
     joint = accumarray(joint,1,[nbins nbins]);
     sing_x = histc(sing_x,x1);
     sing_y = histc(sing_y,x1);
-    joint = joint / sum(sum(joint));
-    sing_x = sing_x / sum(sing_x);
-    sing_y = sing_y / sum(sing_y);
+    joint_norm = joint / sum(sum(joint));
+    sing_x_norm = sing_x / sum(sing_x);
+    sing_y_norm = sing_y / sum(sing_y);
 end
 
 %get probability distributions for computing association
-P_X = sing_x;
-P_Y = sing_y;
+P_X = sing_x_norm;
+P_Y = sing_y_norm;
+N_X = sing_x;
+N_Y = sing_y;
 
-P_XY = nan(nbins(1),nbins(2));
-for i = 1:nbins(1)
-	for j = 1:nbins(2)
-		P_XY(i,j) = joint(i,j,i,j);
-	end
+if D == 2
+    P_XY = nan(nbins(1),nbins(2));
+    for i = 1:nbins(1)
+        for j = 1:nbins(2)
+            P_XY(i,j) = joint_norm(i,j,i,j);
+            N_XY(i,j) = joint(i,j,i,j);
+        end
+    end
 end
 
 A_ij = log(P_XY) - log(P_X) - log(P_Y);
@@ -146,9 +151,9 @@ A_tot = nansum(nansum(A_ij.*P_X.*P_Y));
 
 data.A_ij = A_ij;
 data.A_tot = A_tot;
-data.P_XY = P_XY;
-data.P_X = P_X;
-data.P_Y = P_Y;
+data.N_XY = N_XY;
+data.N_X = N_X;
+data.N_Y = N_Y;
 data.n_times = n_times;
 
 
