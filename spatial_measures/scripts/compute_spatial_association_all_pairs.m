@@ -7,7 +7,7 @@ maxes = [100 100];
 dir = '/Users/samiam/Desktop/Baboons';
 ndays = 14;
 min_dist_sleep_site = 100;
-n_randomizations = 10;
+n_randomizations = 1;
 min_times = 500000; %minimum number of tracked seconds an individual must have to be included in the analysis
 
 paras.nbins = nbins;
@@ -19,6 +19,7 @@ paras.min_dist_sleep_site = min_dist_sleep_site;
 paras.min_times = min_times;
 
 %% Load data
+addpath(genpath(dir))
 disp('loading data...')
 load([dir '/data/matlab_processed/individual_level_metrics/pos_rel_to_centroid_level1.mat'],'xs_rel','ys_rel')
 load([dir '/data/matlab_raw/day_start_idxs.mat'])
@@ -37,6 +38,7 @@ ys = ys(inds_to_use,:);
 baboon_info = baboon_info(inds_to_use);
 paras.inds_used = inds_to_use;
 N = length(inds_to_use);
+T = size(xs,2);
 
 %% Remove data from near the sleep site
 troop_dist_from_sleep_site = troop_dist_from_sleep_site(1:(day_start_idxs(ndays+1)-1));
@@ -65,14 +67,16 @@ end
 disp('computing randomized dyadic associations...')
 assoc_data_rand = cell(N,N,n_randomizations);
 assoc_mat_rand = nan(N,N,n_randomizations);
+xy = nan(N,T,2);
+xy(:,:,1) = xs;
+xy(:,:,2) = ys;
 for r = 1:n_randomizations
-    [ xs_shuff ] = shuffle_ids_by_day( xs, day_start_idxs(1:ndays) );
-    [ ys_shuff ] = shuffle_ids_by_day( ys, day_start_idxs(1:ndays) );
+    [ xy_shuff ] = shuffle_ids_by_day( xy, day_start_idxs(1:ndays) );
     for i = 1:N
         disp([r i])
         for j = i:N
-            X = [xs_shuff(i,:)' ys_shuff(i,:)'];
-            Y = [xs_shuff(j,:)' ys_shuff(j,:)'];
+            X = [xy_shuff(i,:,1)' xy_shuff(i,:,2)'];
+            Y = [xy_shuff(j,:,1)' xy_shuff(j,:,2)'];
             dataij = dyadic_association(X,Y,mins,maxes,nbins);
             assoc_data_rand{i,j,r} = dataij;
             assoc_data_rand{j,i,r} = dataij;
@@ -83,6 +87,6 @@ for r = 1:n_randomizations
 end
 
 disp('saving data...')
-save([dir '/positioning_analysis/dyadic_association/dyad_assoc_days1-' num2str(ndays) '20_bins.mat'],'assoc_data','assoc_mat','assoc_data_rand','assoc_mat_rand','paras')
+save([dir '/positioning_analysis/dyadic_association/dyad_assoc_days1-' num2str(ndays) '_20_bins.mat'],'assoc_data','assoc_mat','assoc_data_rand','assoc_mat_rand','paras')
         
 disp('done!')
