@@ -137,17 +137,18 @@ N_Y = sing_y;
 
 if D == 2
     P_XY = nan(nbins(1),nbins(2));
+    N_XY = nan(nbins(1),nbins(2));
     for i = 1:nbins(1)
         for j = 1:nbins(2)
-            P_XY(i,j) = joint_norm(i,j,i,j);
-            N_XY(i,j) = joint(i,j,i,j);
+            P_XY(i,j) = joint_norm(i,i,j,j);
+            N_XY(i,j) = joint(i,i,j,j);
         end
     end
 end
 
 A_ij = log(P_XY) - log(P_X) - log(P_Y);
 A_ij(find(P_XY == 0 .* P_X == 0 .* P_Y == 0)) = NaN;
-A_tot = nansum(nansum(A_ij.*P_X.*P_Y));
+A_tot = nansum(nansum(A_ij.*(P_X+P_Y-P_XY)));
 
 data.A_ij = A_ij;
 data.A_tot = A_tot;
