@@ -4,10 +4,10 @@
 nbins = [20 20];
 mins = [-100 -100];
 maxes = [100 100];
-dir = '/Users/samiam/Desktop/Baboons';
+dir = '/home/arianasp/baboons';
 ndays = 14;
 min_dist_sleep_site = 100;
-n_randomizations = 1;
+n_randomizations = 100;
 min_times = 500000; %minimum number of tracked seconds an individual must have to be included in the analysis
 
 paras.nbins = nbins;
