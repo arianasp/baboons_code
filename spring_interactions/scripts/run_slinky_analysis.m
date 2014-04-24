@@ -14,13 +14,13 @@
 %%% ----------- Input / output parameters ----------------- %%%
 
 %whether to load data from file or generate new data
-load_data = 0;
+load_data = 1;
 
 %whether to save output data
-save_data = 0;
+save_data = 1;
 
 %whether to save output figures
-save_figs = 0;
+save_figs = 1;
 
 %data file containing x,y data
 xydatafile = '/Users/arianasp/Desktop/Baboons/data/matlab_raw/xy_level1.mat';
@@ -43,10 +43,10 @@ day_range = 1:14;
 %making this parameter larger will mean that larger differences in dyadic
 %distance are required before they are considered events (in a sense this
 %controls the spatial scale over which you want to look at interactions)
-noise_thresh = 10;
+noise_thresh = 5;
 
 %which type of interaction to focus on (push, pull, anchor, repel)
-event_type = 'push';
+event_type = 'anchor';
 
 %which type of threshold to use (multiplicative or additive) 'mult' or
 %'add'
@@ -111,7 +111,7 @@ disp('constructing event matrix...')
 
 
 disp('ranking event matrix...')
-[ new_mat, ranks ] = rank_mat( direc_mat, '_mean', 'descend', 'col');
+[ new_mat, ranks ] = rank_mat( direc_mat, 'mean', 'descend', 'col');
 for i = 1:N
     new_mat(i,i) = 0;
 end
@@ -129,8 +129,12 @@ if save_figs
     print('-dpng',[figdir '/' event_type '_direc_mat_noise_thresh_' num2str(noise_thresh) '_min_strength_' num2str(strength_thresh) '_min_disp_' num2str(disp_thresh) '.png'])
 end
 
+paras = {};
+paras.noise_thresh = noise_thresh;
+paras.day_range = day_range;
+
 if save_data
-    save([outdir '/dyad_interactions_noise_thresh_' num2str(noise_thresh) '.mat'])
+    save([outdir '/dyad_interactions_noise_thresh_' num2str(noise_thresh) '.mat'],'interactions_all','paras')
 end
 
 
