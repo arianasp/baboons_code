@@ -3,9 +3,9 @@
 %% Parameters
 
 last_day = 14;
-event_type = 'pull';
+event_type = 'anchor';
 min_dist_from_sleep_site = 100;
-noise_thresh = 10;
+noise_thresh = 3;
 min_strength = 0.1;
 min_disp = 0.1;
 figdir = '/Users/arianasp/Desktop/Baboons/output/push_pull/plots/interactions_across_contexts';
@@ -151,7 +151,8 @@ network_data.direc_high_speed_travel = direc_high_speed_travel;
 network_data.direc_progressions = direc_progressions;
 network_data.direc_non_progressions = direc_non_progressions;
 
-save([savedir '/' event_type '_network_data.mat'],'network_data')
+
+save([savedir '/' event_type '_network_data_noise_thresh_' num2str(noise_thresh) '_strength_' num2str(min_strength) '_disp_' num2str(min_disp)],'network_data')
 
 %% Create heat maps
 disp('creating heat maps...')
@@ -223,6 +224,14 @@ print('-dpng',[fig_subdir '/' event_type '_ranks_non_progressions_vs_progression
 plot_with_age_sex_class(transpose(ranks_stationary), transpose(ranks_high_speed_travel),baboon_info, 'rank when stationary', 'rank during high-speed travel', [event_type ' network in different contexts'])
 print('-dpng',[fig_subdir '/' event_type '_ranks_stationary_vs_high_speed_travel_corr_plot.png'])
 
+%stationary vs non-progressions
+plot_with_age_sex_class(transpose(ranks_stationary), transpose(ranks_non_progressions),baboon_info, 'rank when stationary', 'rank in non-progressions', [event_type ' network in different contexts'])
+print('-dpng',[fig_subdir '/' event_type '_ranks_stationary_vs_non_progressions_corr_plot.png'])
+
+%stationary vs progressions
+plot_with_age_sex_class(transpose(ranks_stationary), transpose(ranks_progressions),baboon_info, 'rank when stationary', 'rank in progressions', [event_type ' network in different contexts'])
+print('-dpng',[fig_subdir '/' event_type '_ranks_stationary_vs_progressions_corr_plot.png'])
+
 %all vs stationary
 plot_with_age_sex_class(transpose(ranks_all), transpose(ranks_stationary),baboon_info, 'rank over all data', 'rank when stationary', [event_type ' network in different contexts'])
 print('-dpng',[fig_subdir '/' event_type '_ranks_all_vs_stationary_corr_plot.png'])
@@ -238,32 +247,32 @@ print('-dpng',[fig_subdir '/' event_type '_ranks_all_vs_non_progressions_corr_pl
 %all vs progressions
 plot_with_age_sex_class(transpose(ranks_all), transpose(ranks_progressions),baboon_info, 'rank over all data', 'rank during progressions', [event_type ' network in different contexts'])
 print('-dpng',[fig_subdir '/' event_type '_ranks_all_vs_progressions_corr_plot.png'])
-% 
-% %% Plots of pull vs anchor
-% 
-% %all data
-% plot_with_age_sex_class(transpose(pull_ranks_all), transpose(anchor_ranks_all),baboon_info, 'pull rank', 'anchor rank', 'all data')
-% print('-dpng',[fig_subdir '/rpull_vs_anchor_ranks_all_data_corr_plot.png'])
-% 
-% %stationary
-% plot_with_age_sex_class(transpose(pull_ranks_stationary), transpose(anchor_ranks_stationary),baboon_info, 'pull rank', 'anchor rank', 'stationary')
-% print('-dpng',[fig_subdir '/pull_vs_anchor_ranks_stationary_data_corr_plot.png'])
-% 
-% %progressions
-% plot_with_age_sex_class(transpose(pull_ranks_progressions), transpose(anchor_ranks_progressions),baboon_info, 'pull rank', 'anchor rank', 'progressions')
-% print('-dpng',[fig_subdir '/pull_vs_anchor_ranks_progressions_data_corr_plot.png'])
-% 
-% %non-progressions
-% plot_with_age_sex_class(transpose(pull_ranks_non_progressions), transpose(anchor_ranks_non_progressions),baboon_info, 'pull rank', 'anchor rank', 'non-progressions')
-% print('-dpng',[fig_subdir '/pull_vs_anchor_ranks_non_progressions_data_corr_plot.png'])
-% 
-% %high-speed travel
-% plot_with_age_sex_class(transpose(pull_ranks_high_speed_travel), transpose(anchor_ranks_high_speed_travel),baboon_info, 'pull rank', 'anchor rank', 'high-speed travel')
-% print('-dpng',[fig_subdir '/pull_vs_anchor_ranks_high_speed_travel_data_corr_plot.png'])
-% 
-% %low-speed travel
-% plot_with_age_sex_class(transpose(pull_ranks_low_speed_travel), transpose(anchor_ranks_low_speed_travel),baboon_info, 'pull rank', 'anchor rank', 'low-speed travel')
-% print('-dpng',[fig_subdir '/pull_vs_anchor_ranks_low_speed_travel_data_corr_plot.png'])
-% 
-% 
-% 
+
+%% Plots of pull vs anchor
+
+%all data
+plot_with_age_sex_class(transpose(pull_ranks_all), transpose(anchor_ranks_all),baboon_info, 'pull rank', 'anchor rank', 'all data')
+print('-dpng',[fig_subdir '/rpull_vs_anchor_ranks_all_data_corr_plot.png'])
+
+%stationary
+plot_with_age_sex_class(transpose(pull_ranks_stationary), transpose(anchor_ranks_stationary),baboon_info, 'pull rank', 'anchor rank', 'stationary')
+print('-dpng',[fig_subdir '/pull_vs_anchor_ranks_stationary_data_corr_plot.png'])
+
+%progressions
+plot_with_age_sex_class(transpose(pull_ranks_progressions), transpose(anchor_ranks_progressions),baboon_info, 'pull rank', 'anchor rank', 'progressions')
+print('-dpng',[fig_subdir '/pull_vs_anchor_ranks_progressions_data_corr_plot.png'])
+
+%non-progressions
+plot_with_age_sex_class(transpose(pull_ranks_non_progressions), transpose(anchor_ranks_non_progressions),baboon_info, 'pull rank', 'anchor rank', 'non-progressions')
+print('-dpng',[fig_subdir '/pull_vs_anchor_ranks_non_progressions_data_corr_plot.png'])
+
+%high-speed travel
+plot_with_age_sex_class(transpose(pull_ranks_high_speed_travel), transpose(anchor_ranks_high_speed_travel),baboon_info, 'pull rank', 'anchor rank', 'high-speed travel')
+print('-dpng',[fig_subdir '/pull_vs_anchor_ranks_high_speed_travel_data_corr_plot.png'])
+
+%low-speed travel
+plot_with_age_sex_class(transpose(pull_ranks_low_speed_travel), transpose(anchor_ranks_low_speed_travel),baboon_info, 'pull rank', 'anchor rank', 'low-speed travel')
+print('-dpng',[fig_subdir '/pull_vs_anchor_ranks_low_speed_travel_data_corr_plot.png'])
+
+
+
