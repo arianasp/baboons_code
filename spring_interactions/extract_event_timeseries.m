@@ -15,7 +15,8 @@ function [ interactions_over_time ] = extract_event_timeseries( interactions_all
 %       (defaults to 0)
 %OUTPUTS:
 %   interactions_over_time: [NxNx(t_end - t_start + 1) array] where
-%       interactions_over_time(i,j,t) = 1 if j is leading i at time t and 0
+%       interactions_over_time(i,j,t) = 1 or 2 if j is leading i at time t 
+%       (1 if it's between t1 and t2-1, 2 if between t2 and t3), and 0 
 %       otherwise
 
 %get number of individuals
@@ -56,6 +57,7 @@ for i = 1:N
         for k = 1:length(interactions)
             
             t0 = interactions(k).time_idxs(1);
+            tm = interactions(k).time_idxs(2);
             tf = interactions(k).time_idxs(3);
             
             %if within the time range
@@ -71,12 +73,15 @@ for i = 1:N
                     disp = interactions(k).disp_mult;
                     if strength >= min_strength && disp >= min_disp
                         t_event_begin = max(t0,t_start);
+                        t_event_mid = tm;
                         t_event_end = min(tf,t_end);
                         start_idx = t_event_begin - t_start + 1;
+                        mid_idx = t_event_mid - t_start + 1;
                         end_idx = t_event_end - t_start + 1;
                         leader = interactions(k).leader;
                         follower = interactions(k).follower;
-                        interactions_over_time(leader,follower,start_idx:end_idx) = 1;
+                        interactions_over_time(leader,follower,start_idx:(mid_idx-1)) = 1;
+                        interactions_over_time(leader,follower,mid_idx:end_idx) = 2;
                     end
                 end
             end

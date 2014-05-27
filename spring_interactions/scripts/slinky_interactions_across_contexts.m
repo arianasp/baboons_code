@@ -5,7 +5,7 @@
 last_day = 14;
 event_type = 'anchor';
 min_dist_from_sleep_site = 100;
-noise_thresh = 3;
+noise_thresh = 5;
 min_strength = 0.1;
 min_disp = 0.1;
 figdir = '/Users/arianasp/Desktop/Baboons/output/push_pull/plots/interactions_across_contexts';
@@ -152,7 +152,7 @@ network_data.direc_progressions = direc_progressions;
 network_data.direc_non_progressions = direc_non_progressions;
 
 
-save([savedir '/' event_type '_network_data_noise_thresh_' num2str(noise_thresh) '_strength_' num2str(min_strength) '_disp_' num2str(min_disp)],'network_data')
+save([savedir '/' event_type '_network_data_noise_thresh_' num2str(noise_thresh) '_strength_' num2str(min_strength) '_disp_' num2str(min_disp) '.mat'],'network_data')
 
 %% Create heat maps
 disp('creating heat maps...')

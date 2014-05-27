@@ -14,13 +14,13 @@
 %%% ----------- Input / output parameters ----------------- %%%
 
 %whether to load data from file or generate new data
-load_data = 1;
+load_data = 0;
 
 %whether to save output data
 save_data = 1;
 
 %whether to save output figures
-save_figs = 1;
+save_figs = 0;
 
 %data file containing x,y data
 xydatafile = '/Users/arianasp/Desktop/Baboons/data/matlab_raw/xy_level1.mat';
@@ -32,6 +32,8 @@ outdir = '/Users/arianasp/Desktop/Baboons/output/push_pull/interactions_data';
 figdir = '/Users/arianasp/Desktop/Baboons/output/push_pull/plots';
 
 datadir = '/Users/arianasp/Desktop/Baboons/output/push_pull/interactions_data';
+
+remove_ind_16 = 1;
 
 %%% ----------- Analysis-related parameters -------------- %%%
 
@@ -46,7 +48,7 @@ day_range = 1:14;
 noise_thresh = 5;
 
 %which type of interaction to focus on (push, pull, anchor, repel)
-event_type = 'anchor';
+event_type = 'pull';
 
 %which type of threshold to use (multiplicative or additive) 'mult' or
 %'add'
@@ -75,7 +77,6 @@ else
     N = size(xs,1);
 end
 
-
 %% Get interactions if needed
 
 if not(load_data)
@@ -85,6 +86,7 @@ if not(load_data)
 
     %get interactions between every pair of individuals and store them
     for a = 1:N
+        a
         for b = (a+1):N
             [ interactions ] = dyadic_interactions( xs, ys, day_start_idxs, day_range, a, b, noise_thresh );
             interactions_all{a,b} = interactions;
@@ -104,6 +106,16 @@ end
 disp('constructing event matrix...')
 
 [ event_mat, direc_mat ] = event_count_matrix( interactions_all, event_type, thresh_type, strength_thresh, disp_thresh );
+
+
+%% Remove individual 16
+if remove_ind_16
+    baboon_info = [baboon_info(1:15) baboon_info(17:N)];
+    event_mat = event_mat([1:15 17:N],[1:15 17:N]);
+    direc_mat = direc_mat([1:15 17:N],[1:15 17:N]);
+    N = N - 1;
+end
+
 
 %% Rank directionality matrix by mean directionality for each individual
 %Rank the directionality matrix (direc_mat) from high to low. "Leaders"

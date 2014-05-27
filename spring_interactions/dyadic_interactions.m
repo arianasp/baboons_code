@@ -38,6 +38,7 @@ day_start_idxs = [day_start_idxs T+1];
 %get dyadic distance over time
 [ dyadic_dists ] = dyadic_dist_over_time( xs, ys, a, b);
 
+
 %struct to hold all interactions
 interactions = {};
 
@@ -47,8 +48,18 @@ for d = day_range
     t_range = day_start_idxs(d):(day_start_idxs(d+1)-1);
     dyadic_dists_curr = dyadic_dists(t_range);
     
-    %pull out peaks
-    [ mins_maxes ] = find_max_min_points( dyadic_dists_curr, noise_thresh );
+    %break into sequences that contain no NaNs
+    [seqs seq_starts] = get_non_nan_sequences(dyadic_dists_curr',3);
+    
+    %gets mins and maxes for each sequence and aggregate them together into
+    %one list
+    mins_maxes = [];
+    for i = 1:length(seqs)
+        mins_maxes_curr = find_max_min_points(seqs{i},noise_thresh);
+        mins_maxes = [mins_maxes; mins_maxes_curr + seq_starts(i)-1];
+    end
+    
+    %adjust the indices on mins_maxes
     mins_maxes = mins_maxes + day_start_idxs(d) - 1;
     
     %extract triads of times
@@ -96,6 +107,23 @@ for d = day_range
     min_max_min_dyadic_dist_diffs = diff(min_max_min_dyadic_dists,1,2);
     max_min_max_dyadic_dist_diffs = diff(max_min_max_dyadic_dists,1,2);
     
+    %vector between individual a and b during each time
+    x_a_min_max_min = reshape(xs(a,min_max_min),nrow_min_max_min,3);
+    y_a_min_max_min = reshape(ys(a,min_max_min),nrow_min_max_min,3);
+    x_b_min_max_min = reshape(xs(b,min_max_min),nrow_min_max_min,3);
+    y_b_min_max_min = reshape(ys(b,min_max_min),nrow_min_max_min,3);
+    
+    x_a_max_min_max = reshape(xs(a,max_min_max),nrow_max_min_max,3);
+    y_a_max_min_max = reshape(ys(a,max_min_max),nrow_max_min_max,3);
+    x_b_max_min_max = reshape(xs(b,max_min_max),nrow_max_min_max,3);
+    y_b_max_min_max = reshape(ys(b,max_min_max),nrow_max_min_max,3);
+    
+    dx_ab_min_max_min = x_b_min_max_min - x_a_min_max_min;
+    dy_ab_min_max_min = y_b_min_max_min - y_a_min_max_min;
+    
+    dx_ab_max_min_max = x_b_max_min_max - x_a_max_min_max;
+    dy_ab_max_min_max = y_b_max_min_max - y_a_max_min_max;
+    
     %get difference in distance traveled by a and during t1-->t2 (col 1)
     %and t2--> t3 (col 2) during each event
     min_max_min_travel_diffs = min_max_min_dist_a - min_max_min_dist_b;
@@ -125,7 +153,6 @@ for d = day_range
     max_min_max_disps_mult = (abs(max_min_max_travel_diffs(:,1)) .* abs(max_min_max_travel_diffs(:,2)))./...
         (max_min_max_travel_sums(:,1) .* max_min_max_travel_sums(:,2));
     
-    
     for i = 1:nrow_min_max_min
         interactions(idx).day = d;
         interactions(idx).noise_thresh = noise_thresh;
@@ -141,26 +168,45 @@ for d = day_range
                 interactions(idx).type = 'anchor';
                 interactions(idx).leader = b;
                 interactions(idx).follower = a;
-                idx = idx + 1;
+                interactions(idx).leader_disp_12 = [min_max_min_dx_b(i,1); min_max_min_dy_b(i,1)];
+                interactions(idx).leader_disp_23 = [min_max_min_dx_b(i,2); min_max_min_dy_b(i,2)];
+                interactions(idx).follower_disp_12 = [min_max_min_dx_a(i,1); min_max_min_dy_a(i,1)];
+                interactions(idx).follower_disp_23 = [min_max_min_dx_a(i,2); min_max_min_dy_a(i,2)];
+                interactions(idx).dyad_vector_t2 = [dx_ab_min_max_min(i,2); dy_ab_min_max_min(i,2)];
             elseif min_max_min_travel_diffs(i,2) < 0
                 interactions(idx).type = 'pull';
                 interactions(idx).leader = a;
                 interactions(idx).follower = b;
-                idx = idx + 1;
+                interactions(idx).leader_disp_12 = [min_max_min_dx_a(i,1); min_max_min_dy_a(i,1)];
+                interactions(idx).leader_disp_23 = [min_max_min_dx_a(i,2); min_max_min_dy_a(i,2)];
+                interactions(idx).follower_disp_12 = [min_max_min_dx_b(i,1); min_max_min_dy_b(i,1)];
+                interactions(idx).follower_disp_23 = [min_max_min_dx_b(i,2); min_max_min_dy_b(i,2)];
+                interactions(idx).dyad_vector_t2 = [-dx_ab_min_max_min(i,2); -dy_ab_min_max_min(i,2)];
             end
         elseif min_max_min_travel_diffs(i,1) < 0
             if min_max_min_travel_diffs(i,2) > 0
                 interactions(idx).type = 'pull';
                 interactions(idx).leader = b;
                 interactions(idx).follower = a;
-                idx = idx + 1;
+                interactions(idx).leader_disp_12 = [min_max_min_dx_b(i,1); min_max_min_dy_b(i,1)];
+                interactions(idx).leader_disp_23 = [min_max_min_dx_b(i,2); min_max_min_dy_b(i,2)];
+                interactions(idx).follower_disp_12 = [min_max_min_dx_a(i,1); min_max_min_dy_a(i,1)];
+                interactions(idx).follower_disp_23 = [min_max_min_dx_a(i,2); min_max_min_dy_a(i,2)];
+                interactions(idx).dyad_vector_t2 = [dx_ab_min_max_min(i,2); dy_ab_min_max_min(i,2)];
             elseif min_max_min_travel_diffs(i,2) < 0
                 interactions(idx).type = 'anchor';
                 interactions(idx).leader = a;
                 interactions(idx).follower = b;
-                idx = idx + 1;
+                interactions(idx).leader_disp_12 = [min_max_min_dx_a(i,1); min_max_min_dy_a(i,1)];
+                interactions(idx).leader_disp_23 = [min_max_min_dx_a(i,2); min_max_min_dy_a(i,2)];
+                interactions(idx).follower_disp_12 = [min_max_min_dx_b(i,1); min_max_min_dy_b(i,1)];
+                interactions(idx).follower_disp_23 = [min_max_min_dx_b(i,2); min_max_min_dy_b(i,2)];
+                interactions(idx).dyad_vector_t2 = [-dx_ab_min_max_min(i,2); -dy_ab_min_max_min(i,2)];
             end
         end
+
+        idx = idx + 1;
+        
     end
     
     for i = 1:nrow_max_min_max
@@ -178,26 +224,45 @@ for d = day_range
                 interactions(idx).type = 'repel';
                 interactions(idx).leader = b;
                 interactions(idx).follower = a;
-                idx = idx + 1;
+                interactions(idx).leader_disp_12 = [max_min_max_dx_b(i,1); max_min_max_dy_b(i,1)];
+                interactions(idx).leader_disp_23 = [max_min_max_dx_b(i,2); max_min_max_dy_b(i,2)];
+                interactions(idx).follower_disp_12 = [max_min_max_dx_a(i,1); max_min_max_dy_a(i,1)];
+                interactions(idx).follower_disp_23 = [max_min_max_dx_a(i,2); max_min_max_dy_a(i,2)];
+                interactions(idx).dyad_vector_t2 = [dx_ab_max_min_max(i,2); dy_ab_max_min_max(i,2)];
             elseif max_min_max_travel_diffs(i,2) < 0
                 interactions(idx).type = 'push';
                 interactions(idx).leader = a;
                 interactions(idx).follower = b;
-                idx = idx + 1;
+                interactions(idx).leader_disp_12 = [max_min_max_dx_a(i,1); max_min_max_dy_a(i,1)];
+                interactions(idx).leader_disp_23 = [max_min_max_dx_a(i,2); max_min_max_dy_a(i,2)];
+                interactions(idx).follower_disp_12 = [max_min_max_dx_b(i,1); max_min_max_dy_b(i,1)];
+                interactions(idx).follower_disp_23 = [max_min_max_dx_b(i,2); max_min_max_dy_b(i,2)];
+                interactions(idx).dyad_vector_t2 = [-dx_ab_max_min_max(i,2); -dy_ab_max_min_max(i,2)];
             end
         elseif max_min_max_travel_diffs(i,1) < 0
             if max_min_max_travel_diffs(i,2) > 0
                 interactions(idx).type = 'push';
                 interactions(idx).leader = b;
                 interactions(idx).follower = a;
-                idx = idx + 1;
+                interactions(idx).leader_disp_12 = [max_min_max_dx_b(i,1); max_min_max_dy_b(i,1)];
+                interactions(idx).leader_disp_23 = [max_min_max_dx_b(i,2); max_min_max_dy_b(i,2)];
+                interactions(idx).follower_disp_12 = [max_min_max_dx_a(i,1); max_min_max_dy_a(i,1)];
+                interactions(idx).follower_disp_23 = [max_min_max_dx_a(i,2); max_min_max_dy_a(i,2)];
+                interactions(idx).dyad_vector_t2 = [dx_ab_max_min_max(i,2); dy_ab_max_min_max(i,2)];
             elseif max_min_max_travel_diffs(i,2) < 0
                 interactions(idx).type = 'repel';
                 interactions(idx).leader = a;
                 interactions(idx).follower = b;
-                idx = idx + 1;
+                interactions(idx).leader_disp_12 = [max_min_max_dx_a(i,1); max_min_max_dy_a(i,1)];
+                interactions(idx).leader_disp_23 = [max_min_max_dx_a(i,2); max_min_max_dy_a(i,2)];
+                interactions(idx).follower_disp_12 = [max_min_max_dx_b(i,1); max_min_max_dy_b(i,1)];
+                interactions(idx).follower_disp_23 = [max_min_max_dx_b(i,2); max_min_max_dy_b(i,2)];
+                interactions(idx).dyad_vector_t2 = [-dx_ab_max_min_max(i,2); -dy_ab_max_min_max(i,2)];
             end
         end
+        
+        idx = idx + 1;
+        
     end
 
 
