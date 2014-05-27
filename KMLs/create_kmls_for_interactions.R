@@ -1,7 +1,6 @@
-dir <- '/Users/arianasp/Desktop/Baboons/google_earth/slinky_interactions/noise_thresh_10'
+dir <- '/Users/arianasp/Desktop/Baboons/google_earth/slinky_interactions/noise_thresh_5'
 
 ids <- read.csv("/Users/arianasp/Desktop/Baboons/data/csv_raw/IDs.csv")
-int_num <- 1
 
 ints <- as.data.frame(read.csv(paste(dir, '/interactions_list.csv',sep=''),header=TRUE))
 
@@ -10,6 +9,7 @@ system(paste('mkdir ', dir ,'/kmls',sep=''))
 for(int_num in 1:dim(ints)[1]){
 
 # READ IN DATA
+if(file.exists(paste(dir,'/latlons/',ints$FILE[int_num],'.csv',sep=''))){
 mydata <- read.csv(paste(dir,'/latlons/',ints$FILE[int_num],'.csv',sep=''))
 colours <- c('baboon_red.png','baboon_blue.png','baboon_black.png')
 
@@ -68,4 +68,5 @@ for (h in hours) {
 cat("</Document>\n")
 cat("</kml>\n")
 sink()
+}
 }
