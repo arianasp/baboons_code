@@ -2,10 +2,10 @@
 %and then fitting the model, then checking whether the parameters agree
 
 %INPUT PARAMETERS HERE
-N = 14; %number of individuals
+N = 16; %number of individuals
 n_samps = 100000; %number of samples to take
-weight = 1;
-converge_thresh = 0.001;
+weight = 0.1;
+converge_thresh = 10^(-7);
 max_iter = 100000;
 
 %Set some random parameters (between -1 and 1)
@@ -19,17 +19,16 @@ for i = 1:N
 end
 
 %Generate data with these parameters
-disp('generating data')
+disp('Generating data...')
 tic
 [ data ] = generate_ising_data( alpha, beta, n_samps );
 toc
 
 %Fit an Ising model to the generated data (use default parameters in the
 %fit)
-disp('fitting ising model')
+disp('Fitting ising model...')
 tic
 [ alpha_fit, beta_fit ] = fit_ising( data, weight, converge_thresh, max_iter);
-disp('model fit!')
 toc
 
 %Plot results

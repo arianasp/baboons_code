@@ -69,9 +69,9 @@ for i = 1:max_iter
     
     tot_E_diff = sum(abs(E_diff)); %total difference in expectations (used as convergence condition)
     
-    curr_KL_div = KL_divergence(P_emp,P_model); %compute KL divergence btwn empirical & current model
-
-    dKL = previous_KL_div - curr_KL_div; %get the change in KL divergence
+    curr_KL_div = sum ( log(P_emp ./ P_model) .* P_emp ); %compute KL divergence btwn empirical & current model
+    
+    dKL = previous_KL_div - curr_KL_div %get the change in KL divergence
     
     %if converged
     if dKL < converge_thresh
@@ -93,7 +93,7 @@ for i = 1:max_iter
         while new_KL_div > curr_KL_div
             new_coeffs = coeffs + curr_weight*E_diff'; %get new coefficients using current weight
             new_P_model = ising_probabilities( new_coeffs, state_mat ); %get probabilities from new model
-            new_KL_div = KL_divergence(P_emp, new_P_model); %KL divergence btwn empirical and new model
+            new_KL_div = sum ( log(P_emp ./ new_P_model) .* P_emp); %KL divergence btwn empirical and new model
             curr_weight = curr_weight / 2; %current weight gets divided in half, until new model is better than old (according to KL divergence)
         end
 
