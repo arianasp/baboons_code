@@ -2,7 +2,7 @@
 %and then fitting the model, then checking whether the parameters agree
 
 %INPUT PARAMETERS HERE
-N = 16; %number of individuals
+N = 10; %number of individuals
 n_samps = 100000; %number of samples to take
 weight = 0.1;
 converge_thresh = 10^(-7);
@@ -62,6 +62,15 @@ title('difference between beta and fitted beta')
 axis square
 colormap(red_white_blue_colormap())
 colorbar
+
+%Compute entropy
+H_orig = ising_entropy(alpha,beta); %compute entropy of model distribution
+H_sim = empirical_entropy(data,0); %entropy of simulated data
+H_fit = ising_entropy(alpha_fit, beta_fit); %entropy of the fitted model
+
+fprintf('Entropy of the original ising model: %f \n',H_orig);
+fprintf('Entropy of the simulated data distribution: %f \n',H_sim);
+fprintf('Entropy of the fitted ising model: %f \n',H_fit);
 
 
 
