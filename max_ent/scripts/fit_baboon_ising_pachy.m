@@ -25,7 +25,7 @@ fits = {};
 for d = 1:n_days
     
     %pare down data to only include the individuals used, and only within the appropriate day range
-    baboon_states_curr = baboon_states(inds_used,1:(day_start_idxs(d+1)-1));
+    baboon_states_curr = baboon_states(inds_used,(day_start_idxs(d):(day_start_idxs(d+1)-1));
 
     %also make states called 0 and 1 instead of 1 and 2
     baboon_states_curr = baboon_states_curr - 1;
