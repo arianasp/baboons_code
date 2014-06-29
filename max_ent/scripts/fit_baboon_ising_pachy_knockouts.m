@@ -46,13 +46,13 @@ for i = 1:length(inds_used)
 
     [ alpha_fit, beta_fit ] = fit_ising( baboon_states_curr, weight, converge_thresh, max_iter );
     
-    fits(d).inds_used = inds_used_curr;
-    fits(d).knocked_out = inds_used(i);
-    fits(d).alphas = alpha_fit;
-    fits(d).beta = beta_fit;
-    fits(d).baboon_info_used = baboon_info_used;
-    fits(d).baboon_info_knockout = baboon_info_knockout;
-    fits(d).states = baboon_states_curr;
+    fits(i).inds_used = inds_used_curr;
+    fits(i).knocked_out = inds_used(i);
+    fits(i).alphas = alpha_fit;
+    fits(i).beta = beta_fit;
+    fits(i).baboon_info_used = baboon_info_used;
+    fits(i).baboon_info_knockout = baboon_info_knockout;
+    fits(i).states = baboon_states_curr;
 
     save([outdir '/baboon_ising_fits_single_knockouts.mat','fits'])
     disp('ind completed')
