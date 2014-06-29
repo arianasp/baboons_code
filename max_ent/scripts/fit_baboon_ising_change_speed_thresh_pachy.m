@@ -35,7 +35,7 @@ for i = 1:length(threshes)
     
     size(baboon_states_curr)
 
-    [ alpha_fit, beta_fit ] = fit_ising( baboon_states, weight, converge_thresh, max_iter );
+    [ alpha_fit, beta_fit ] = fit_ising( baboon_states_curr, weight, converge_thresh, max_iter );
     
     fits(i).log_speed_thresh = thresh;
     fits(i).alphas = alpha_fit;
@@ -45,6 +45,6 @@ for i = 1:length(threshes)
     fits(i).baboon_info = baboon_info;
     fits(i).states = baboon_states_curr;
 
-    save('/home/arianasp/baboons/output/max_ent/baboon_ising_fits_by_thresh.mat','fits')
+    save('/home/arianasp/baboons/output/max_ent/baboon_ising_fits_by_speed_thresh.mat','fits')
     disp('thresh completed')
 end
