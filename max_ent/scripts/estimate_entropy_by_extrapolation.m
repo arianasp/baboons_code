@@ -8,7 +8,7 @@ outdir = '/home/arianasp/baboons/output/max_ent';
 n_days = 14; %number of days of data to use
 inds_used = [1:2 4:7 9:11 15 18 19 21 22 26]; %which individuals to use in the model (the 16 who have data on all days)
 data_fracs = linspace(1,10,19);
-reps = 10;
+reps = 100;
 
 
 %READ IN AND PRE-PROCESS DATA
@@ -36,4 +36,4 @@ baboon_states_curr = baboon_states_curr(:,find(nans==0));
 %SUBSAMPLE AND ESTIMATE ENTROPY
 [ H_ests ] = entropy_vs_sample_size( baboon_states_curr, data_fracs, reps )
 
-save([outdir '/entropy_vs_sample_size_10reps.mat'])
+save([outdir '/entropy_vs_sample_size_100reps.mat'])
