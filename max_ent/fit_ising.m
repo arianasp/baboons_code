@@ -83,7 +83,9 @@ for iter = 1:max_iter
                 beta_fit(j,i) = beta_fit(i,j);
             end
         end
-        fprintf('Model converged in %d iterations. \n',i)
+        fprintf('Model converged in %d iterations. \n',iter)
+        fprintf('KL = %f \n',curr_KL_div)
+        fprintf('dKL = %f \n',dKL)
         
         return 
     %if not converged    
@@ -104,7 +106,7 @@ for iter = 1:max_iter
     end
 end
 
-fprintf('Model failed to converge in %d iterations',i)
+fprintf('Model failed to converge in %d iterations \n',iter)
 fprintf('KL = %f \n',curr_KL_div)
 fprintf('dKL = %f \n',dKL)
 warning('model failed to converge - returning current coefficients')
