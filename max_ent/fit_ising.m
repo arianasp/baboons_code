@@ -84,6 +84,7 @@ for i = 1:max_iter
             end
         end
         fprintf('Model converged in %d iterations. \n',i)
+        
         return 
     %if not converged    
     else
@@ -103,6 +104,9 @@ for i = 1:max_iter
     end
 end
 
+fprintf('Model failed to converge in %d iterations',i)
+fprintf('KL = %f \n',curr_KL_div)
+fprintf('dKL = %f \n',dKL)
 warning('model failed to converge - returning current coefficients')
 alpha_fit = coeffs(1:N);
 beta_fit = tri_mat;
