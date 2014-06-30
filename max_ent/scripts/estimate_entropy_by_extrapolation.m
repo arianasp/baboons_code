@@ -34,6 +34,6 @@ nans = sum(isnan(baboon_states_curr),1);
 baboon_states_curr = baboon_states_curr(:,find(nans==0));
 
 %SUBSAMPLE AND ESTIMATE ENTROPY
-[ H_ests ] = entropy_vs_sample_size( states, data_fracs, reps )
+[ H_ests ] = entropy_vs_sample_size( baboon_states_curr, data_fracs, reps )
 
 save([outdir '/entropy_vs_sample_size_10reps.mat'])
