@@ -6,7 +6,7 @@ inds_used = [1:2 4:7 9:11 15 18 19 21 22 26]; %which individuals to use in the m
 weight = 0.5;
 converge_thresh = 10^(-7);
 max_iter = 100000;
-threshes = [-3 -3 -1.9 -1.8 -1.7 -1.6 -1.5 -1.4 -1.3 -1.2 -1.1 -1 -.9 -.8 -.7 -.6 -.5 -.4 -.3 -.2 -.1 0 0.1 0.2 0.3 0.4 0.5];
+threshes = [-.2 -.1 0 0:.01:.2 0.25 0.3 0.35 0.4 0.45 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2];
 
 %load data from speeds file
 load('/home/arianasp/baboons/data/matlab_processed/individual_level_metrics/speeds_step_10_level1.mat')
@@ -45,6 +45,6 @@ for i = 1:length(threshes)
     fits(i).baboon_info = baboon_info;
     fits(i).states = baboon_states_curr;
 
-    save('/home/arianasp/baboons/output/max_ent/baboon_ising_fits_by_speed_thresh.mat','fits')
+    save('/home/arianasp/baboons/output/max_ent/baboon_ising_fits_by_speed_thresh2.mat','fits')
     disp('thresh completed')
 end
