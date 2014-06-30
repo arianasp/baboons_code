@@ -6,7 +6,7 @@ inds_used = [1:2 4:7 9:11 15 18 19 21 22 26]; %which individuals to use in the m
 weight = 0.5;
 converge_thresh = 10^(-7);
 max_iter = 100000;
-threshes = [-.2 -.1 0 0:.01:.2 0.25 0.3 0.35 0.4 0.45 0.5 0.6 0.7 0.8 0.9 1 1.1 1.2];
+threshes = [-4 -3.5 -3 -2.5 -2:.2:0 0.5];
 
 %load data from speeds file
 load('/home/arianasp/baboons/data/matlab_processed/individual_level_metrics/speeds_step_10_level1.mat')
@@ -24,7 +24,7 @@ fits = {};
 for i = 1:length(threshes)
     thresh = threshes(i);
     
-    baboon_states = speeds > thresh;
+    baboon_states = logspeeds > thresh;
     
     %pare down data to only include the individuals used, and only within the appropriate day range
     baboon_states_curr = baboon_states(inds_used,1:(day_start_idxs(n_days+1)-1));
@@ -45,6 +45,6 @@ for i = 1:length(threshes)
     fits(i).baboon_info = baboon_info;
     fits(i).states = baboon_states_curr;
 
-    save('/home/arianasp/baboons/output/max_ent/baboon_ising_fits_by_speed_thresh2.mat','fits')
+    save('/home/arianasp/baboons/output/max_ent/baboon_ising_fits_by_speed_thresh3.mat','fits')
     disp('thresh completed')
 end
