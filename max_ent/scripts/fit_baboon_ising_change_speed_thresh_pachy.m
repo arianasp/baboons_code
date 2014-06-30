@@ -30,8 +30,8 @@ for i = 1:length(threshes)
     baboon_states_curr = baboon_states(inds_used,1:(day_start_idxs(n_days+1)-1));
 
     %get rid of any rows with NaNs
-    nans = sum(isnan(logspeeds),1);
-    baboon_states_curr = baboon_states_curr(:,find(nans==0));
+    nans = sum(isnan(speeds(inds_used,:)),1);
+    baboon_states_curr = baboon_states_curr(:,nans==0);
     
     size(baboon_states_curr)
 
