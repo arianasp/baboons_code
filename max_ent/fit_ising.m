@@ -59,7 +59,7 @@ coeffs = init_coeffs; %initialize coefficients
 
 %run the fit
 previous_KL_div = Inf;
-for i = 1:max_iter
+for iter = 1:max_iter
     
     P_model = ising_probabilities( coeffs, state_mat ); %get the model probabilities
     
