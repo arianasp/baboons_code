@@ -94,10 +94,10 @@ for iter = 1:max_iter
         new_KL_div = Inf; %initialize new KL divergence at infinity
         
         while new_KL_div > curr_KL_div
+            curr_weight = curr_weight / 2; %current weight gets divided in half, until new model is better than old (according to KL divergence)
             new_coeffs = coeffs + curr_weight*E_diff'; %get new coefficients using current weight
             new_P_model = ising_probabilities( new_coeffs, state_mat ); %get probabilities from new model
             new_KL_div = KL_divergence(P_emp, new_P_model); %KL divergence btwn empirical and new model
-            curr_weight = curr_weight / 2; %current weight gets divided in half, until new model is better than old (according to KL divergence)
         end
 
         coeffs = coeffs + curr_weight*E_diff'; %update coefficients
